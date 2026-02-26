@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useSite } from '../context/SiteContext';
 import { supabase } from '../lib/supabase';
+import MagneticButton from './MagneticButton';
 
 export default function Contact() {
     const { data } = useSite();
@@ -65,30 +66,32 @@ export default function Contact() {
                     dangerouslySetInnerHTML={{ __html: contact.title }}
                 />
 
-                <motion.a
-                    href={`mailto:${contact.email}`}
-                    className="relative group text-lg sm:text-3xl md:text-5xl lg:text-6xl font-medium tracking-tight text-[var(--color-brand-accent)] inline-block mb-16 md:mb-32 break-all md:break-normal"
-                    onMouseEnter={() => setIsHovered(true)}
-                    onMouseLeave={() => setIsHovered(false)}
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.3 }}
-                >
-                    {/* Main Text */}
-                    <span className="relative z-10 transition-colors duration-300 group-hover:text-black">{contact.email}</span>
+                <MagneticButton strength={0.05} className="mb-16 md:mb-32">
+                    <motion.a
+                        href={`mailto:${contact.email}`}
+                        className="relative group text-lg sm:text-3xl md:text-5xl lg:text-6xl font-medium tracking-tight text-[var(--color-brand-accent)] inline-block break-all md:break-normal"
+                        onMouseEnter={() => setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, delay: 0.3 }}
+                    >
+                        {/* Main Text */}
+                        <span className="relative z-10 transition-colors duration-300 group-hover:text-black">{contact.email}</span>
 
-                    {/* Hover Glow / Background Fill */}
-                    <motion.div
-                        className="absolute inset-x-[-2%] inset-y-[-10%] bg-[var(--color-brand-red)] rounded-none -z-0 origin-bottom"
-                        initial={{ scaleY: 0 }}
-                        animate={{ scaleY: isHovered ? 1 : 0 }}
-                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                    />
+                        {/* Hover Glow / Background Fill */}
+                        <motion.div
+                            className="absolute inset-x-[-2%] inset-y-[-10%] bg-[var(--color-brand-red)] rounded-none -z-0 origin-bottom"
+                            initial={{ scaleY: 0 }}
+                            animate={{ scaleY: isHovered ? 1 : 0 }}
+                            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                        />
 
-                    {/* Underline for non-hover state */}
-                    <div className="absolute left-0 right-0 bottom-[-4px] h-[2px] bg-white/30 transition-opacity duration-300 group-hover:opacity-0" />
-                </motion.a>
+                        {/* Underline for non-hover state */}
+                        <div className="absolute left-0 right-0 bottom-[-4px] h-[2px] bg-white/30 transition-opacity duration-300 group-hover:opacity-0" />
+                    </motion.a>
+                </MagneticButton>
 
                 <div className="flex flex-wrap gap-4 md:gap-8 items-center justify-center mt-8 mb-24">
                     {[
@@ -147,13 +150,15 @@ export default function Contact() {
                         onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
                         className="w-full bg-white/5 border border-white/20 p-4 rounded-xl text-white outline-none focus:border-[var(--color-brand-red)] transition-colors placeholder:text-white/30 backdrop-blur-md resize-y"
                     />
-                    <button
-                        type="submit"
-                        disabled={status === 'submitting'}
-                        className="w-full py-4 bg-[var(--color-brand-red)] text-white font-bold uppercase tracking-widest text-sm rounded-xl hover:bg-white hover:text-black transition-all mt-2 disabled:opacity-50"
-                    >
-                        {status === 'submitting' ? 'Sending...' : status === 'success' ? 'Message Sent!' : 'Send Message'}
-                    </button>
+                    <MagneticButton strength={0.1} className="w-full mt-2">
+                        <button
+                            type="submit"
+                            disabled={status === 'submitting'}
+                            className="w-full py-4 bg-[var(--color-brand-red)] text-white font-bold uppercase tracking-widest text-sm rounded-xl hover:bg-white hover:text-black transition-all disabled:opacity-50"
+                        >
+                            {status === 'submitting' ? 'Sending...' : status === 'success' ? 'Message Sent!' : 'Send Message'}
+                        </button>
+                    </MagneticButton>
                 </motion.form>
             </div>
 

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useSite } from '../context/SiteContext';
 import { Link } from 'react-router-dom';
+import MagneticButton from './MagneticButton';
+import ImageLoader from './ImageLoader';
 
 export default function MyWorkPreview() {
     const { data } = useSite();
@@ -93,10 +95,11 @@ export default function MyWorkPreview() {
                                             className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                                         />
                                     ) : (
-                                        <img
+                                        <ImageLoader
                                             src={coverUrl}
                                             alt={item.title}
-                                            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                                            className="transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                                            containerClassName="w-full h-full"
                                         />
                                     )}
                                     {/* Indicator for multiple images */}
@@ -114,16 +117,18 @@ export default function MyWorkPreview() {
                     </div>
 
                     <div className="flex justify-center">
-                        <Link
-                            to="/media"
-                            className="inline-flex items-center justify-center gap-4 px-8 py-4 bg-[var(--color-brand-red)] text-white font-bold hover:bg-white hover:text-black transition-all duration-300 uppercase tracking-widest text-xs rounded-full group"
-                        >
-                            View All Work
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 transition-transform group-hover:translate-x-1">
-                                <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                <path d="M12 5L19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </Link>
+                        <MagneticButton strength={0.2}>
+                            <Link
+                                to="/media"
+                                className="inline-flex items-center justify-center gap-4 px-8 py-4 bg-[var(--color-brand-red)] text-white font-bold hover:bg-white hover:text-black transition-all duration-300 uppercase tracking-widest text-xs rounded-full group"
+                            >
+                                View All Work
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 transition-transform group-hover:translate-x-1">
+                                    <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M12 5L19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </Link>
+                        </MagneticButton>
                     </div>
                 </div>
 

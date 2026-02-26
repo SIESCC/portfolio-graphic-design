@@ -4,6 +4,7 @@ import { useSite } from '../context/SiteContext';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Play } from 'lucide-react';
 import Footer from '../components/Footer';
+import ImageLoader from '../components/ImageLoader';
 
 export default function Media() {
     const { data } = useSite();
@@ -115,10 +116,11 @@ export default function Media() {
                                                     </div>
                                                 </div>
                                             ) : (
-                                                <img
+                                                <ImageLoader
                                                     src={coverUrl}
                                                     alt={item.title}
-                                                    className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-[1.03] opacity-90 group-hover:opacity-100"
+                                                    className="transition-transform duration-1000 group-hover:scale-[1.03] opacity-90 group-hover:opacity-100"
+                                                    containerClassName="w-full h-auto"
                                                 />
                                             )}
                                             {/* Indicator for multiple images */}
