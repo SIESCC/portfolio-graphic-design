@@ -102,27 +102,28 @@ export default function Admin() {
         });
     };
 
-    const handleArrayAdd = (path, arrayType) => {
+    const handleArrayAdd = (path) => {
         setFormData(prev => {
             const newData = JSON.parse(JSON.stringify(prev));
             let current = newData;
             for (let i = 0; i < path.length; i++) {
                 current = current[path[i]];
             }
-            // Generate empty shell from defaultData config base types
+
+            // Traverse defaultData dynamically using path
+            let templateCurrent = defaultData;
+            for (let i = 0; i < path.length; i++) {
+                if (!isNaN(path[i])) {
+                    // For array indices in path, assume defaultData has the template at index 0
+                    templateCurrent = templateCurrent[0];
+                } else {
+                    templateCurrent = templateCurrent[path[i]];
+                }
+            }
+
             let templateItem = null;
-            if (arrayType === 'experience.list') {
-                templateItem = defaultData.experience.list[0];
-            } else if (arrayType === 'featuredWork.projects') {
-                templateItem = defaultData.featuredWork.projects[0];
-            } else if (arrayType === 'resume.experience') {
-                templateItem = defaultData.resume.experience[0];
-            } else if (arrayType === 'resume.projects') {
-                templateItem = defaultData.resume.projects[0];
-            } else if (arrayType === 'resume.education') {
-                templateItem = defaultData.resume.education[0];
-            } else if (arrayType === 'artwork.gallery') {
-                templateItem = defaultData.artwork.gallery[0];
+            if (templateCurrent && Array.isArray(templateCurrent) && templateCurrent.length > 0) {
+                templateItem = templateCurrent[0];
             }
 
             if (templateItem) {
@@ -201,7 +202,7 @@ export default function Admin() {
                         <div className="flex justify-between items-center mb-4">
                             <label className="text-sm text-[var(--color-brand-accent)] uppercase tracking-widest block font-bold">{key} List</label>
                             <button
-                                onClick={() => handleArrayAdd(path, `${path[0]}.${path[1]}`)}
+                                onClick={() => handleArrayAdd(path)}
                                 className="text-xs bg-white text-black px-3 py-1 rounded-full font-bold uppercase tracking-widest hover:bg-white/80"
                             >
                                 + Add Item

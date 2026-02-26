@@ -111,11 +111,13 @@ export const defaultData = {
         additionalInfo: "• Strong stakeholder communication skills\n• Ability to manage multiple projects in fast-paced environments\n• High attention to detail and quality assurance\n• Adaptable to corporate branding standards and structured workflows"
     },
     artwork: {
-        title: "Media Archive",
+        title: "My Work",
         gallery: [
             {
-                mediaUrl: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=1972&auto=format&fit=crop",
-                title: "Example Design"
+                title: "Example Design",
+                mediaList: [
+                    { mediaUrl: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=1972&auto=format&fit=crop" }
+                ]
             }
         ]
     }
