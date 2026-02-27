@@ -196,7 +196,8 @@ export default function Admin() {
                 newUrls.push(data.publicUrl);
             }
 
-            const updatedArray = [...currentArray, ...newUrls];
+            const cleanCurrent = (currentArray || []).filter(v => typeof v === 'string' && v.trim() !== '');
+            const updatedArray = [...cleanCurrent, ...newUrls];
             handleDeepUpdate(path, updatedArray);
 
             toast.success("Upload successful!", { id: 'upload-multi' });
