@@ -6,6 +6,7 @@ import ImageLoader from './ImageLoader';
 
 export default function CaseStudyPreview({ project, index }) {
     const containerRef = useRef(null);
+    const validVisuals = (project.designVisuals || []).filter(v => typeof v === 'string' && v.trim() !== '');
 
     return (
         <div ref={containerRef} className="w-full flex flex-col lg:flex-row gap-12 lg:gap-16 mb-40 last:mb-0 relative py-10">
@@ -108,25 +109,29 @@ export default function CaseStudyPreview({ project, index }) {
                 </motion.div>
 
                 {/* Top Right Extra Image */}
-                {project.designVisuals?.[0] && (
+                {validVisuals[0] && (
                     <motion.div
-                        className="col-span-1 md:col-span-5 row-span-1 rounded-[2rem] overflow-hidden relative group bg-gray-900"
+                        className={`col-span-1 md:col-span-5 ${validVisuals[1] ? 'row-span-1' : 'row-span-2'} rounded-[2rem] overflow-hidden relative group bg-gray-900`}
                         initial={{ opacity: 0, x: 20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true, margin: "-50px" }}
                         transition={{ duration: 0.7, delay: 0.2 }}
                     >
-                        <ImageLoader
-                            src={project.designVisuals[0]}
-                            alt={`${project.title} detail`}
-                            className="transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100"
-                            containerClassName="w-full h-full"
-                        />
+                        {String(validVisuals[0]).match(/\.(mp4|webm|ogg)$/i) ? (
+                            <video src={validVisuals[0]} autoPlay loop muted playsInline className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                        ) : (
+                            <ImageLoader
+                                src={validVisuals[0]}
+                                alt={`${project.title} detail`}
+                                className="transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                                containerClassName="w-full h-full"
+                            />
+                        )}
                     </motion.div>
                 )}
 
                 {/* Bottom Right Extra Image */}
-                {project.designVisuals?.[1] && (
+                {validVisuals[1] && (
                     <motion.div
                         className="col-span-1 md:col-span-5 row-span-1 rounded-[2rem] overflow-hidden relative group bg-gray-900"
                         initial={{ opacity: 0, x: 20 }}
@@ -134,12 +139,16 @@ export default function CaseStudyPreview({ project, index }) {
                         viewport={{ once: true, margin: "-50px" }}
                         transition={{ duration: 0.7, delay: 0.4 }}
                     >
-                        <ImageLoader
-                            src={project.designVisuals[1]}
-                            alt={`${project.title} detail`}
-                            className="transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100"
-                            containerClassName="w-full h-full"
-                        />
+                        {String(validVisuals[1]).match(/\.(mp4|webm|ogg)$/i) ? (
+                            <video src={validVisuals[1]} autoPlay loop muted playsInline className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                        ) : (
+                            <ImageLoader
+                                src={validVisuals[1]}
+                                alt={`${project.title} detail`}
+                                className="transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                                containerClassName="w-full h-full"
+                            />
+                        )}
                     </motion.div>
                 )}
             </div>
