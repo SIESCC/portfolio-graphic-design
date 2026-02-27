@@ -174,25 +174,70 @@ export default function Admin() {
         }
     };
 
+    const handleMultiFileUpload = async (path, currentArray, e) => {
+        const files = Array.from(e.target.files);
+        if (!files.length) return;
+
+        toast.loading("Uploading multiple files to 'portfolio-media' bucket...", { id: 'upload-multi' });
+
+        try {
+            const newUrls = [];
+            for (const file of files) {
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+
+                const { error: uploadError } = await supabase.storage
+                    .from('portfolio-media')
+                    .upload(fileName, file);
+
+                if (uploadError) throw uploadError;
+
+                const { data } = supabase.storage.from('portfolio-media').getPublicUrl(fileName);
+                newUrls.push(data.publicUrl);
+            }
+
+            const updatedArray = [...currentArray, ...newUrls];
+            handleDeepUpdate(path, updatedArray);
+
+            toast.success("Upload successful!", { id: 'upload-multi' });
+        } catch (error) {
+            toast.error(error.message, { id: 'upload-multi' });
+        }
+    };
+
     const renderField = (key, value, path) => {
         const isArray = Array.isArray(value);
         const isObject = typeof value === 'object' && value !== null && !isArray;
         const isTextArea = !isArray && !isObject && (String(value).length > 60 || String(value).includes('\n'));
 
-        const isMediaField = Boolean(key.toLowerCase().match(/(image|video|media|file|url|placeholder|cover|logo)/i));
+        const isMediaField = Boolean(key.toLowerCase().match(/(image|video|media|file|url|placeholder|cover|logo|visual)/i));
 
         if (isArray) {
             const isStringArray = (value.length > 0 && typeof value[0] === 'string') || key === 'categories';
             if (isStringArray) {
                 return (
-                    <div key={path.join('-')} className="mb-4">
-                        <label className="text-[10px] text-[var(--color-brand-accent)]/80 uppercase tracking-widest mb-1 block font-bold">
-                            {key} (Comma Separated)
-                        </label>
+                    <div key={path.join('-')} className="mb-4 bg-white/5 border border-white/10 p-4 rounded-xl">
+                        <div className="flex justify-between items-center mb-2">
+                            <label className="text-[10px] text-[var(--color-brand-accent)]/80 uppercase tracking-widest block font-bold">
+                                {key} (Comma Separated)
+                            </label>
+                            {isMediaField && (
+                                <label className="cursor-pointer text-[10px] bg-white/10 border border-white/20 px-3 py-1 rounded text-white font-bold uppercase tracking-widest hover:bg-white/20 transition-colors">
+                                    Upload Multiple
+                                    <input
+                                        type="file"
+                                        className="hidden"
+                                        accept="image/*,video/*"
+                                        multiple
+                                        onChange={(e) => handleMultiFileUpload(path, value, e)}
+                                    />
+                                </label>
+                            )}
+                        </div>
                         <textarea
                             value={value.join(', ')}
                             onChange={(e) => handleDeepUpdate(path, e.target.value.split(',').map(s => s.trim()))}
-                            className="w-full bg-white/5 border border-white/20 rounded-lg p-3 text-white focus:outline-none focus:border-white transition-colors min-h-[80px]"
+                            className="w-full bg-black/40 border border-white/20 rounded-lg p-3 text-white focus:outline-none focus:border-white transition-colors min-h-[80px]"
                         />
                     </div>
                 );
