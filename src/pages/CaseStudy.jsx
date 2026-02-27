@@ -117,7 +117,7 @@ export default function CaseStudy() {
 
                         {/* Design Visuals */}
                         <div className="flex flex-col gap-8 w-full mt-12">
-                            {project.designVisuals.map((visual, idx) => (
+                            {(project.designVisuals || []).filter(v => typeof v === 'string' && v.trim() !== '').map((visual, idx) => (
                                 <motion.div
                                     key={idx}
                                     className="w-full relative overflow-hidden bg-white/5 aspect-video md:aspect-[16/10] group"
@@ -126,12 +126,23 @@ export default function CaseStudy() {
                                     viewport={{ once: true, margin: "-50px" }}
                                     transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                                 >
-                                    <img
-                                        src={visual}
-                                        alt={`Design Exploration ${idx + 1} `}
-                                        className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
-                                        loading="lazy"
-                                    />
+                                    {String(visual).match(/\.(mp4|webm|ogg)$/i) ? (
+                                        <video
+                                            src={visual}
+                                            autoPlay
+                                            loop
+                                            muted
+                                            playsInline
+                                            className="w-full h-full object-cover transition-all duration-700"
+                                        />
+                                    ) : (
+                                        <img
+                                            src={visual}
+                                            alt={`Design Exploration ${idx + 1} `}
+                                            className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
+                                            loading="lazy"
+                                        />
+                                    )}
                                 </motion.div>
                             ))}
                         </div>
