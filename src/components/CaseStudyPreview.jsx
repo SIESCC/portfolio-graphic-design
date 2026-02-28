@@ -26,7 +26,7 @@ export default function CaseStudyPreview({ project, index }) {
                     </motion.div>
 
                     <motion.h3
-                        className="text-5xl md:text-6xl lg:text-7xl font-serif text-white tracking-tight leading-[1] mb-8"
+                        className="text-5xl md:text-6xl lg:text-7xl font-serif text-white tracking-tight leading-[1] mb-8 break-words"
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}

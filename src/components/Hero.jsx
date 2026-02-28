@@ -15,7 +15,7 @@ export default function Hero() {
     const bgLetters = bgName.split('');
 
     return (
-        <section className="relative w-full h-[100vh] min-h-[800px] bg-[var(--color-brand-bg)] flex flex-col overflow-hidden">
+        <section className="relative w-full min-h-[100svh] bg-[var(--color-brand-bg)] flex flex-col overflow-hidden">
             {/* Dark elegant animated gradient background */}
             <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
                 <motion.div

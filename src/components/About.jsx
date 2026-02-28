@@ -15,7 +15,7 @@ export default function About() {
                 {/* Left: Large Typography Title */}
                 <div className="w-full lg:w-1/2">
                     <motion.h2
-                        className="text-5xl md:text-7xl lg:text-8xl font-serif text-white leading-[1] tracking-tight"
+                        className="text-5xl md:text-7xl lg:text-8xl font-serif text-white leading-[1] tracking-tight break-words"
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
