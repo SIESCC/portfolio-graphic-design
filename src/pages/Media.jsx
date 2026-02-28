@@ -9,15 +9,7 @@ import ImageLoader from '../components/ImageLoader';
 export default function Media() {
     const { data } = useSite();
     const { artwork } = data;
-    const [mediaItems, setMediaItems] = useState([]);
-
-    // Modal State
-    const [selectedItem, setSelectedItem] = useState(null);
-    const [currentIndex, setCurrentIndex] = useState(0);
-
-    useEffect(() => {
-        window.scrollTo(0, 0);
-
+    const mediaItems = React.useMemo(() => {
         const items = [];
         if (artwork && artwork.gallery) {
             artwork.gallery.forEach(item => {
@@ -34,8 +26,16 @@ export default function Media() {
                 }
             });
         }
-        setMediaItems(items);
+        return items;
     }, [artwork]);
+
+    // Modal State
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     // Handle slider navigation
     const goNext = (e) => {

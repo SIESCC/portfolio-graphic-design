@@ -23,9 +23,9 @@ export default function Navbar() {
                 {global.navbarLogo}
             </Link>
             <div className="flex flex-wrap justify-center md:justify-end gap-4 md:gap-6 text-[10px] md:text-sm font-medium uppercase tracking-widest text-[var(--color-brand-accent)] items-center">
-                <a href="/#work" className="hover:opacity-75 transition-opacity">{global.navLink1}</a>
-                <a href="/#about" className="hover:opacity-75 transition-opacity">{global.navLink2}</a>
-                <a href="/#contact" className="hover:opacity-75 transition-opacity">{global.navLink3}</a>
+                <Link to="/#work" className="hover:opacity-75 transition-opacity">{global.navLink1}</Link>
+                <Link to="/#about" className="hover:opacity-75 transition-opacity">{global.navLink2}</Link>
+                <Link to="/#contact" className="hover:opacity-75 transition-opacity">{global.navLink3}</Link>
                 <Link to="/media" className="whitespace-nowrap hover:opacity-75 transition-opacity">
                     My Work
                 </Link>

@@ -23,6 +23,7 @@ export default function Home() {
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: loadingComplete ? 1 : 0 }}
+                exit={{ opacity: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
             >
                 <Navbar />

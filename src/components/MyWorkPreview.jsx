@@ -8,13 +8,7 @@ import ImageLoader from './ImageLoader';
 export default function MyWorkPreview() {
     const { data } = useSite();
     const { artwork } = data;
-    const [previewItems, setPreviewItems] = useState([]);
-
-    // Modal State
-    const [selectedItem, setSelectedItem] = useState(null);
-    const [currentIndex, setCurrentIndex] = useState(0);
-
-    useEffect(() => {
+    const previewItems = React.useMemo(() => {
         const items = [];
         if (artwork && artwork.gallery) {
             artwork.gallery.forEach(item => {
@@ -32,8 +26,12 @@ export default function MyWorkPreview() {
                 }
             });
         }
-        setPreviewItems(items.slice(0, 4));
+        return items.slice(0, 4);
     }, [artwork]);
+
+    // Modal State
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [currentIndex, setCurrentIndex] = useState(0);
 
     // Handle slider navigation
     const goNext = (e) => {

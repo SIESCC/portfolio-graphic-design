@@ -8,7 +8,9 @@ import Footer from '../components/Footer';
 export default function CaseStudy() {
     const { data } = useSite();
     const { id } = useParams();
-    const [project, setProject] = useState(null);
+    const project = React.useMemo(() => {
+        return data.featuredWork?.projects?.find(p => p.id === id) || null;
+    }, [id, data.featuredWork]);
 
     const { scrollYProgress } = useScroll();
     const headerY = useTransform(scrollYProgress, [0, 1], [0, 300]);
@@ -17,9 +19,7 @@ export default function CaseStudy() {
     useEffect(() => {
         // Scroll to top on load
         window.scrollTo(0, 0);
-        const found = data.featuredWork?.projects?.find(p => p.id === id);
-        setProject(found);
-    }, [id, data.featuredWork]);
+    }, [id]);
 
     if (!project) return <div className="h-screen bg-[var(--color-brand-bg)] text-white flex items-center justify-center">Loading...</div>;
 
