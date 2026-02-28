@@ -65,90 +65,85 @@ export default function CaseStudy() {
                 </div>
             </section>
 
-            {/* Main Content Grid */}
-            <section className="w-full py-24 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-8">
+            {/* Main Content Info */}
+            <section className="w-full py-24 px-6 md:px-12 lg:px-24 max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
+                {/* Left: Description */}
+                <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    className="col-span-1 lg:col-span-8"
+                >
+                    <p className="text-2xl md:text-3xl lg:text-4xl text-white/90 leading-relaxed font-serif">
+                        {project.description}
+                    </p>
+                </motion.div>
 
-                    {/* Left Column (Meta/Metrics) */}
-                    <div className="col-span-1 md:col-span-4 flex flex-col gap-12">
+                {/* Right: Challenge and Metrics */}
+                <div className="col-span-1 lg:col-span-4 flex flex-col gap-12 text-left">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-100px" }}
+                    >
+                        <h3 className="text-white/40 uppercase tracking-[0.2em] text-sm mb-6">The Challenge</h3>
+                        <p className="text-base leading-relaxed text-white/80">
+                            {project.problem}
+                        </p>
+                    </motion.div>
 
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-100px" }}
-                        >
-                            <h3 className="text-white/40 uppercase tracking-[0.2em] text-sm mb-4">The Challenge</h3>
-                            <p className="text-lg leading-relaxed text-white/90">
-                                {project.problem}
-                            </p>
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-100px" }}
-                            transition={{ delay: 0.2 }}
-                        >
-                            <h3 className="text-white/40 uppercase tracking-[0.2em] text-sm mb-4">Impact / Metrics</h3>
-                            <ul className="flex flex-col gap-4">
-                                {project.metrics.map((metric, i) => (
-                                    <li key={i} className="text-2xl font-bold tracking-tight border-b border-white/10 pb-4">
-                                        {metric}
-                                    </li>
-                                ))}
-                            </ul>
-                        </motion.div>
-
-                    </div>
-
-                    {/* Right Column (Description & Visuals) */}
-                    <div className="col-span-1 md:col-span-8 flex flex-col gap-24">
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 50 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-100px" }}
-                            transition={{ duration: 0.8, ease: "easeOut" }}
-                        >
-                            <p className="text-2xl md:text-4xl text-white/80 leading-normal font-medium max-w-3xl">
-                                {project.description}
-                            </p>
-                        </motion.div>
-
-                        {/* Design Visuals */}
-                        <div className="flex flex-col gap-8 w-full mt-12">
-                            {(project.designVisuals || []).filter(v => typeof v === 'string' && v.trim() !== '').map((visual, idx) => (
-                                <motion.div
-                                    key={idx}
-                                    className="w-full relative overflow-hidden bg-white/5 aspect-video md:aspect-[16/10] group"
-                                    initial={{ opacity: 0, y: 100 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true, margin: "-50px" }}
-                                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                                >
-                                    {String(visual).match(/\.(mp4|webm|ogg)$/i) ? (
-                                        <video
-                                            src={visual}
-                                            autoPlay
-                                            loop
-                                            muted
-                                            playsInline
-                                            className="w-full h-full object-cover transition-all duration-700"
-                                        />
-                                    ) : (
-                                        <img
-                                            src={visual}
-                                            alt={`Design Exploration ${idx + 1} `}
-                                            className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
-                                            loading="lazy"
-                                        />
-                                    )}
-                                </motion.div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-100px" }}
+                        transition={{ delay: 0.2 }}
+                    >
+                        <h3 className="text-white/40 uppercase tracking-[0.2em] text-sm mb-6">Impact / Metrics</h3>
+                        <ul className="flex flex-col gap-4">
+                            {project.metrics.map((metric, i) => (
+                                <li key={i} className="text-lg font-bold tracking-tight border-b border-white/10 pb-4">
+                                    {metric}
+                                </li>
                             ))}
-                        </div>
+                        </ul>
+                    </motion.div>
+                </div>
+            </section>
 
-                    </div>
-
+            {/* Design Visuals - Full Width */}
+            <section className="w-full px-6 md:px-12 lg:px-24 pb-32 mx-auto max-w-[1600px]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+                    {(project.designVisuals || []).filter(v => typeof v === 'string' && v.trim() !== '').map((visual, idx) => {
+                        return (
+                            <motion.div
+                                key={idx}
+                                className="w-full relative overflow-hidden bg-gray-900 border border-gray-800 rounded-3xl group col-span-1 aspect-square md:aspect-[4/3]"
+                                initial={{ opacity: 0, scale: 0.95, y: 30 }}
+                                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                                viewport={{ once: true, margin: "-50px" }}
+                                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                            >
+                                {String(visual).match(/\.(mp4|webm|ogg)$/i) ? (
+                                    <video
+                                        src={visual}
+                                        autoPlay
+                                        loop
+                                        muted
+                                        playsInline
+                                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                                    />
+                                ) : (
+                                    <img
+                                        src={visual}
+                                        alt={`Design Exploration ${idx + 1} `}
+                                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-90 group-hover:opacity-100"
+                                        loading="lazy"
+                                    />
+                                )}
+                            </motion.div>
+                        );
+                    })}
                 </div>
             </section>
 

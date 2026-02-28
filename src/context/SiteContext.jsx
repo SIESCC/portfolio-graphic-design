@@ -116,7 +116,7 @@ export const defaultData = {
             {
                 title: "Example Design",
                 mediaList: [
-                    { mediaUrl: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=1972&auto=format&fit=crop" }
+                    "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=1972&auto=format&fit=crop"
                 ]
             }
         ]
@@ -146,7 +146,17 @@ export function SiteProvider({ children }) {
                 if (siteData && siteData.length > 0) {
                     const formattedData = { ...defaultData };
                     siteData.forEach(item => {
-                        formattedData[item.section] = { ...formattedData[item.section], ...item.content };
+                        let content = item.content;
+                        // Migrate artwork mediaList from objects to strings for better admin experience
+                        if (item.section === 'artwork' && content && content.gallery) {
+                            content.gallery = content.gallery.map(g => {
+                                if (g.mediaList && Array.isArray(g.mediaList)) {
+                                    g.mediaList = g.mediaList.map(m => (typeof m === 'object' && m !== null) ? m.mediaUrl : m).filter(Boolean);
+                                }
+                                return g;
+                            });
+                        }
+                        formattedData[item.section] = { ...formattedData[item.section], ...content };
                     });
                     setData(formattedData);
                 }

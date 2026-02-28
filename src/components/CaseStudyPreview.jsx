@@ -36,7 +36,7 @@ export default function CaseStudyPreview({ project, index }) {
                     </motion.h3>
 
                     <motion.p
-                        className="text-white/70 text-base md:text-lg mb-10 leading-relaxed font-sans"
+                        className="text-white/70 text-base md:text-lg mb-10 leading-relaxed font-sans line-clamp-3"
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}

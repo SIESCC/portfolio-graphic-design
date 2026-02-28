@@ -22,7 +22,7 @@ export default function MyWorkPreview() {
                 if (item.mediaList && item.mediaList.length > 0) {
                     items.push({
                         title: item.title,
-                        mediaList: item.mediaList.filter(m => m.mediaUrl).map(m => m.mediaUrl)
+                        mediaList: item.mediaList.map(m => typeof m === 'object' && m !== null ? m.mediaUrl : m).filter(Boolean)
                     });
                 } else if (item.mediaUrl) { // Fallback for old data structure
                     items.push({
@@ -150,20 +150,30 @@ export default function MyWorkPreview() {
                         <div className="w-full h-full flex flex-col items-center justify-center relative pointer-events-auto" onClick={e => e.stopPropagation()}>
                             {/* Current Image/Video */}
                             <div className="w-full max-h-[80vh] flex items-center justify-center relative overflow-hidden rounded-md">
-                                {Boolean(selectedItem.mediaList[currentIndex].match(/\.(mp4|webm|ogg)$/i)) ? (
-                                    <video
-                                        src={selectedItem.mediaList[currentIndex]}
-                                        autoPlay
-                                        controls
-                                        className="max-w-full max-h-[80vh] object-contain"
-                                    />
-                                ) : (
-                                    <img
-                                        src={selectedItem.mediaList[currentIndex]}
-                                        alt={`${selectedItem.title} - ${currentIndex + 1}`}
-                                        className="max-w-full max-h-[80vh] object-contain shadow-2xl"
-                                    />
-                                )}
+                                {selectedItem.mediaList.map((mediaUrl, idx) => {
+                                    const isActive = idx === currentIndex;
+                                    const isVideo = Boolean(String(mediaUrl).match(/\.(mp4|webm|ogg)$/i));
+
+                                    return (
+                                        <React.Fragment key={idx}>
+                                            {isVideo ? (
+                                                <video
+                                                    src={mediaUrl}
+                                                    autoPlay={isActive}
+                                                    controls={isActive}
+                                                    className={`max-w-full max-h-[80vh] object-contain ${isActive ? 'block' : 'hidden'}`}
+                                                />
+                                            ) : (
+                                                <img
+                                                    src={mediaUrl}
+                                                    alt={`${selectedItem.title} - ${idx + 1}`}
+                                                    className={`max-w-full max-h-[80vh] object-contain shadow-2xl ${isActive ? 'block' : 'hidden'}`}
+                                                    loading={idx === 0 ? "eager" : "lazy"}
+                                                />
+                                            )}
+                                        </React.Fragment>
+                                    );
+                                })}
 
                                 {/* Navigation Arrows */}
                                 {selectedItem.mediaList.length > 1 && (
