@@ -126,11 +126,17 @@ export default function Admin() {
                 templateItem = templateCurrent[0];
             }
 
-            if (templateItem) {
-                const emptyItem = Object.fromEntries(
-                    Object.entries(templateItem).map(([k, v]) => [k, Array.isArray(v) ? [] : typeof v === 'string' ? '' : v])
-                );
-                current.push(emptyItem);
+            if (templateItem !== undefined && templateItem !== null) {
+                if (typeof templateItem === 'string') {
+                    current.push('');
+                } else if (typeof templateItem === 'object') {
+                    const emptyItem = Object.fromEntries(
+                        Object.entries(templateItem).map(([k, v]) => [k, Array.isArray(v) ? [] : typeof v === 'string' ? '' : v])
+                    );
+                    current.push(emptyItem);
+                } else {
+                    current.push(templateItem); // fallback
+                }
             }
             return newData;
         });
@@ -214,7 +220,7 @@ export default function Admin() {
         const isMediaField = Boolean(key.toLowerCase().match(/(image|video|media|file|url|placeholder|cover|logo|visual)/i));
 
         if (isArray) {
-            const isStringArray = (value.length > 0 && typeof value[0] === 'string') || key === 'categories';
+            const isStringArray = (value.length > 0 && typeof value[0] === 'string') || key === 'categories' || key === 'mediaList';
             if (isStringArray) {
                 return (
                     <div key={path.join('-')} className="mb-4 bg-white/5 border border-white/10 p-4 rounded-xl">
