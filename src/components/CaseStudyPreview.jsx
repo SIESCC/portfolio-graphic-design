@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import MagneticButton from './MagneticButton';
@@ -11,6 +11,28 @@ export default function CaseStudyPreview({ project, index }) {
     const mainImg = displayImages[0];
     const topImg = displayImages[1];
     const bottomImg = displayImages[2];
+
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const openPopup = (index) => {
+        setCurrentIndex(index);
+        setIsPopupOpen(true);
+    };
+
+    const closePopup = () => {
+        setIsPopupOpen(false);
+    };
+
+    const goNext = (e) => {
+        e.stopPropagation();
+        setCurrentIndex((prev) => (prev + 1) % displayImages.length);
+    };
+
+    const goPrev = (e) => {
+        e.stopPropagation();
+        setCurrentIndex((prev) => (prev - 1 + displayImages.length) % displayImages.length);
+    };
 
     return (
         <div ref={containerRef} className="w-full flex flex-col lg:flex-row gap-12 lg:gap-16 mb-40 last:mb-0 relative py-10">
@@ -95,19 +117,20 @@ export default function CaseStudyPreview({ project, index }) {
                 {/* Main Large Image (Spans full height of grid on left) */}
                 {mainImg && (
                     <motion.div
-                        className={`col-span-1 ${topImg ? 'md:col-span-7' : 'md:col-span-12'} row-span-2 rounded-[2rem] overflow-hidden relative group bg-gray-900`}
+                        className={`col-span-1 ${topImg ? 'md:col-span-7' : 'md:col-span-12'} row-span-2 rounded-[2rem] overflow-hidden relative group bg-gray-900 cursor-pointer`}
                         initial={{ opacity: 0, scale: 0.95 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true, margin: "-50px" }}
                         transition={{ duration: 0.7 }}
+                        onClick={() => openPopup(0)}
                     >
                         {String(mainImg).match(/\.(mp4|webm|ogg)$/i) ? (
-                            <video src={mainImg} autoPlay loop muted playsInline className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                            <video src={mainImg} autoPlay loop muted playsInline className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 pointer-events-none" />
                         ) : (
                             <ImageLoader
                                 src={mainImg}
                                 alt={project.title}
-                                className="transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                                className="transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100 pointer-events-none"
                                 containerClassName="w-full h-full"
                             />
                         )}
@@ -117,19 +140,20 @@ export default function CaseStudyPreview({ project, index }) {
                 {/* Top Right Extra Image */}
                 {topImg && (
                     <motion.div
-                        className={`col-span-1 md:col-span-5 ${bottomImg ? 'row-span-1' : 'row-span-2'} rounded-[2rem] overflow-hidden relative group bg-gray-900`}
+                        className={`col-span-1 md:col-span-5 ${bottomImg ? 'row-span-1' : 'row-span-2'} rounded-[2rem] overflow-hidden relative group bg-gray-900 cursor-pointer`}
                         initial={{ opacity: 0, x: 20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true, margin: "-50px" }}
                         transition={{ duration: 0.7, delay: 0.2 }}
+                        onClick={() => openPopup(1)}
                     >
                         {String(topImg).match(/\.(mp4|webm|ogg)$/i) ? (
-                            <video src={topImg} autoPlay loop muted playsInline className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                            <video src={topImg} autoPlay loop muted playsInline className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 pointer-events-none" />
                         ) : (
                             <ImageLoader
                                 src={topImg}
                                 alt={`${project.title} detail`}
-                                className="transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                                className="transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100 pointer-events-none"
                                 containerClassName="w-full h-full"
                             />
                         )}
@@ -139,25 +163,101 @@ export default function CaseStudyPreview({ project, index }) {
                 {/* Bottom Right Extra Image */}
                 {bottomImg && (
                     <motion.div
-                        className="col-span-1 md:col-span-5 row-span-1 rounded-[2rem] overflow-hidden relative group bg-gray-900"
+                        className="col-span-1 md:col-span-5 row-span-1 rounded-[2rem] overflow-hidden relative group bg-gray-900 cursor-pointer"
                         initial={{ opacity: 0, x: 20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true, margin: "-50px" }}
                         transition={{ duration: 0.7, delay: 0.4 }}
+                        onClick={() => openPopup(2)}
                     >
                         {String(bottomImg).match(/\.(mp4|webm|ogg)$/i) ? (
-                            <video src={bottomImg} autoPlay loop muted playsInline className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                            <video src={bottomImg} autoPlay loop muted playsInline className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 pointer-events-none" />
                         ) : (
                             <ImageLoader
                                 src={bottomImg}
                                 alt={`${project.title} detail`}
-                                className="transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                                className="transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100 pointer-events-none"
                                 containerClassName="w-full h-full"
                             />
                         )}
                     </motion.div>
                 )}
             </div>
+
+            {/* Popup Modal */}
+            {isPopupOpen && displayImages.length > 0 && (
+                <div
+                    className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4 md:p-8"
+                    onClick={closePopup}
+                >
+                    <button
+                        className="absolute top-4 right-6 text-white text-3xl hover:text-red-500 z-[99999] cursor-pointer"
+                        onClick={closePopup}
+                    >
+                        &times;
+                    </button>
+
+                    <div className="w-full h-full flex flex-col items-center justify-center relative pointer-events-auto" onClick={e => e.stopPropagation()}>
+                        {/* Current Image/Video */}
+                        <div className="w-full max-h-[80vh] flex items-center justify-center relative overflow-hidden rounded-md">
+                            {displayImages.map((mediaUrl, idx) => {
+                                const isActive = idx === currentIndex;
+                                const isVideo = Boolean(String(mediaUrl).match(/\.(mp4|webm|ogg)$/i));
+
+                                return (
+                                    <React.Fragment key={idx}>
+                                        {isVideo ? (
+                                            <video
+                                                src={mediaUrl}
+                                                autoPlay={isActive}
+                                                controls={isActive}
+                                                className={`max-w-full max-h-[80vh] object-contain ${isActive ? 'block' : 'hidden'}`}
+                                            />
+                                        ) : (
+                                            <img
+                                                src={mediaUrl}
+                                                alt={`${project.title} - ${idx + 1}`}
+                                                className={`max-w-full max-h-[80vh] object-contain shadow-2xl ${isActive ? 'block' : 'hidden'}`}
+                                                loading={idx === 0 ? "eager" : "lazy"}
+                                            />
+                                        )}
+                                    </React.Fragment>
+                                );
+                            })}
+
+                            {/* Navigation Arrows */}
+                            {displayImages.length > 1 && (
+                                <>
+                                    <button
+                                        className="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/30 rounded-full flex items-center justify-center text-white backdrop-blur-md transition-all cursor-pointer z-50"
+                                        onClick={goPrev}
+                                    >
+                                        &#10094;
+                                    </button>
+                                    <button
+                                        className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/30 rounded-full flex items-center justify-center text-white backdrop-blur-md transition-all cursor-pointer z-50"
+                                        onClick={goNext}
+                                    >
+                                        &#10095;
+                                    </button>
+                                </>
+                            )}
+                        </div>
+
+                        {/* Title and Image Counter */}
+                        <div className="mt-6 text-center">
+                            <h3 className="text-white text-xl md:text-2xl font-serif tracking-widest uppercase mb-2">
+                                {project.title}
+                            </h3>
+                            {displayImages.length > 1 && (
+                                <p className="text-white/60 text-sm tracking-widest uppercase">
+                                    {currentIndex + 1} / {displayImages.length}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
