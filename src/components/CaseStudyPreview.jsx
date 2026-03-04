@@ -7,6 +7,10 @@ import ImageLoader from './ImageLoader';
 export default function CaseStudyPreview({ project, index }) {
     const containerRef = useRef(null);
     const validVisuals = (project.designVisuals || []).filter(v => typeof v === 'string' && v.trim() !== '');
+    const displayImages = validVisuals.length > 0 ? validVisuals : (project.image ? [project.image] : []);
+    const mainImg = displayImages[0];
+    const topImg = displayImages[1];
+    const bottomImg = displayImages[2];
 
     return (
         <div ref={containerRef} className="w-full flex flex-col lg:flex-row gap-12 lg:gap-16 mb-40 last:mb-0 relative py-10">
@@ -89,39 +93,41 @@ export default function CaseStudyPreview({ project, index }) {
             <div className="w-full lg:w-2/3 grid grid-cols-1 md:grid-cols-12 gap-4 auto-rows-[200px] md:auto-rows-[300px]">
 
                 {/* Main Large Image (Spans full height of grid on left) */}
-                <motion.div
-                    className="col-span-1 md:col-span-7 row-span-2 rounded-[2rem] overflow-hidden relative group bg-gray-900"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 0.7 }}
-                >
-                    {project.image && String(project.image).match(/\.(mp4|webm|ogg)$/i) ? (
-                        <video src={project.image} autoPlay loop muted playsInline className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-                    ) : (
-                        <ImageLoader
-                            src={project.image}
-                            alt={project.title}
-                            className="transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100"
-                            containerClassName="w-full h-full"
-                        />
-                    )}
-                </motion.div>
+                {mainImg && (
+                    <motion.div
+                        className={`col-span-1 ${topImg ? 'md:col-span-7' : 'md:col-span-12'} row-span-2 rounded-[2rem] overflow-hidden relative group bg-gray-900`}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true, margin: "-50px" }}
+                        transition={{ duration: 0.7 }}
+                    >
+                        {String(mainImg).match(/\.(mp4|webm|ogg)$/i) ? (
+                            <video src={mainImg} autoPlay loop muted playsInline className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                        ) : (
+                            <ImageLoader
+                                src={mainImg}
+                                alt={project.title}
+                                className="transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                                containerClassName="w-full h-full"
+                            />
+                        )}
+                    </motion.div>
+                )}
 
                 {/* Top Right Extra Image */}
-                {validVisuals[0] && (
+                {topImg && (
                     <motion.div
-                        className={`col-span-1 md:col-span-5 ${validVisuals[1] ? 'row-span-1' : 'row-span-2'} rounded-[2rem] overflow-hidden relative group bg-gray-900`}
+                        className={`col-span-1 md:col-span-5 ${bottomImg ? 'row-span-1' : 'row-span-2'} rounded-[2rem] overflow-hidden relative group bg-gray-900`}
                         initial={{ opacity: 0, x: 20 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true, margin: "-50px" }}
                         transition={{ duration: 0.7, delay: 0.2 }}
                     >
-                        {String(validVisuals[0]).match(/\.(mp4|webm|ogg)$/i) ? (
-                            <video src={validVisuals[0]} autoPlay loop muted playsInline className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                        {String(topImg).match(/\.(mp4|webm|ogg)$/i) ? (
+                            <video src={topImg} autoPlay loop muted playsInline className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                         ) : (
                             <ImageLoader
-                                src={validVisuals[0]}
+                                src={topImg}
                                 alt={`${project.title} detail`}
                                 className="transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100"
                                 containerClassName="w-full h-full"
@@ -131,7 +137,7 @@ export default function CaseStudyPreview({ project, index }) {
                 )}
 
                 {/* Bottom Right Extra Image */}
-                {validVisuals[1] && (
+                {bottomImg && (
                     <motion.div
                         className="col-span-1 md:col-span-5 row-span-1 rounded-[2rem] overflow-hidden relative group bg-gray-900"
                         initial={{ opacity: 0, x: 20 }}
@@ -139,11 +145,11 @@ export default function CaseStudyPreview({ project, index }) {
                         viewport={{ once: true, margin: "-50px" }}
                         transition={{ duration: 0.7, delay: 0.4 }}
                     >
-                        {String(validVisuals[1]).match(/\.(mp4|webm|ogg)$/i) ? (
-                            <video src={validVisuals[1]} autoPlay loop muted playsInline className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                        {String(bottomImg).match(/\.(mp4|webm|ogg)$/i) ? (
+                            <video src={bottomImg} autoPlay loop muted playsInline className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                         ) : (
                             <ImageLoader
-                                src={validVisuals[1]}
+                                src={bottomImg}
                                 alt={`${project.title} detail`}
                                 className="transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100"
                                 containerClassName="w-full h-full"
